@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Close the menu on screen resize if the screen becomes large
+  // Close the menu and dropdown on window resize
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
-        setIsMenuOpen(false); // Automatically close the menu for large screens
+        setIsMenuOpen(false); // Close the menu on large screens
+        setIsDropdownOpen(false); // Close the dropdown
       }
     };
 
     window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -21,28 +21,60 @@ function Navbar() {
 
   const menuLinks = [
     { name: "Home", href: "/" },
+    { name: "Services", href: "#" }, // Placeholder for dropdown
     { name: "About Us", href: "/aboutus" },
     { name: "Contact Us", href: "/contactus" },
   ];
 
+  const servicesLinks = [
+    { name: "Service 1", href: "/service1" },
+    { name: "Service 2", href: "/service2" },
+    { name: "Service 3", href: "/service3" },
+  ];
+
   return (
-    <nav className="w-full h-14 flex justify-between px-4 md:px-8 items-center bg-gray-100 shadow-md">
-      {/* Logo */}
+    <nav className="w-full h-14 flex justify-between px-4 md:px-8 items-center bg-gray-100 shadow-md z-50 fixed top-0 left-0 right-0">
+      {/* Logo Section */}
       <div className="text-xl font-bold flex items-center">
         <img src="/logo.png" alt="Business Logo" className="h-10" />
         <p className="m-4">Bapodra Electricals</p>
       </div>
 
-      {/* Menu for Larger Screens */}
+      {/* Menu Links for Larger Screens */}
       <ul className="md:flex hidden items-center">
         {menuLinks.map((link) => (
-          <li key={link.name} className="mx-6 cursor-pointer hover:text-red-800">
-            <a href={link.href}>{link.name}</a>
+          <li key={link.name} className="mx-6 cursor-pointer hover:text-red-800 relative">
+            {link.name === "Services" ? (
+              <>
+                <span
+                  onMouseEnter={() => setIsDropdownOpen(true)}
+                  onMouseLeave={() => setIsDropdownOpen(false)}
+                >
+                  Services
+                </span>
+                <span
+                  className={`ml-2 transform transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`}
+                >
+                  ▼
+                </span>
+                {isDropdownOpen && (
+                  <ul className="absolute left-0 mt-2 bg-white shadow-lg rounded-lg">
+                    {servicesLinks.map((service) => (
+                      <li key={service.name} className="px-6 py-2 cursor-pointer hover:bg-gray-200">
+                        <a href={service.href}>{service.name}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            ) : (
+              <a href={link.href}>{link.name}</a>
+            )}
           </li>
         ))}
       </ul>
 
-      {/* CTA Button */}
+      {/* View Projects Button */}
       <div className="hidden md:block px-4 py-2 bg-red-800 text-white rounded-xl cursor-pointer hover:bg-red-700">
         <a href="#projects">View Projects</a>
       </div>
@@ -75,12 +107,42 @@ function Navbar() {
         <ul className="flex flex-col items-center justify-center h-full space-y-6 text-black text-lg">
           {menuLinks.map((link) => (
             <li key={link.name}>
-              <a
-                href={link.href}
-                onClick={() => setIsMenuOpen(false)} // Close menu on item click
-              >
-                {link.name}
-              </a>
+              {link.name === "Services" ? (
+                <>
+                  <span
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown in mobile
+                    className="cursor-pointer"
+                  >
+                    Services
+                    <span
+                      className={`ml-2 transform transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`}
+                    >
+                      ▼
+                    </span>
+                  </span>
+                  {isDropdownOpen && (
+                    <ul className="flex flex-col space-y-4 mt-4">
+                      {servicesLinks.map((service) => (
+                        <li key={service.name}>
+                          <a
+                            href={service.href}
+                            onClick={() => setIsMenuOpen(false)} // Close menu on item click
+                          >
+                            {service.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              ) : (
+                <a
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)} // Close menu on item click
+                >
+                  {link.name}
+                </a>
+              )}
             </li>
           ))}
           <li>
