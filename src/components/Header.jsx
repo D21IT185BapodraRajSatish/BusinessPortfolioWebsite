@@ -53,7 +53,7 @@ function Navbar() {
                   Services
                 </span>
                 <span
-                  className={`ml-2 transform transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  className={`ml-2 inline-block transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                 >
                   ▼
                 </span>
@@ -115,7 +115,7 @@ function Navbar() {
                   >
                     Services
                     <span
-                      className={`ml-2 transform transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`}
+                      className={`ml-2 inline-block transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
                     >
                       ▼
                     </span>
